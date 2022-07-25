@@ -50,6 +50,7 @@ const options = () => {
                 addDepartment();
                 break;
             case 'Finish':
+                finish();
                 break;
         }
     });
@@ -175,5 +176,9 @@ const addDepartment = () => {
         })
     });
 };
+
+function finish() {
+    db.end();
+}
 
 options();
