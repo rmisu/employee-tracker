@@ -35,16 +35,19 @@ const options = () => {
                 addEmployee();
                 break;
             case 'Update employee role':
+                //could not get to work
                 break;
             case 'View all roles':
                 allRoles();
                 break;
             case 'Add role':
+                addRole();
                 break;
             case 'View all departments':
                 allDepartments();
                 break;
             case 'Add department':
+                addDepartment();
                 break;
             case 'Finish':
                 break;
@@ -79,7 +82,6 @@ const addEmployee = () => {
         type: 'input',
         name: 'roles',
         message: 'What is this employees role?',
-        //cant figure out how to list current roles in the table as options
     },
     {
         type: 'input',
@@ -130,6 +132,18 @@ const addRole =  () => {
             message: 'What department is this role in? (1-4)?',
         }
     ])
+    .then(results => {
+        let params = [
+            results.role,
+            results.salary,
+            results.department
+        ]
+    let sql = `INSERT INTO roles (title, salary, department) VALUES (?,?,?)`;
+        db.query(sql, params, (err, rows) => {
+            consoleTable.table(rows);
+            return options();
+        });
+    })
 }
 
 const allDepartments = () => {
@@ -138,6 +152,27 @@ const allDepartments = () => {
     (err, rows) => {
         console.table(rows);
     return options();
+    });
+};
+
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department',
+            message: 'What is the new department name?',
+        },
+    ])
+    .then(result => {
+        let params = [
+            result.name
+        ]
+    let sql = `INSERT INTO department (name) VALUES (?)`;
+        db.query(sql, params, (err, rows) =>  {
+            console.table(rows);
+                return options();
+            
+        })
     });
 };
 
