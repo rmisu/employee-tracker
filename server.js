@@ -32,6 +32,7 @@ const options = () => {
                 allEmployees();
                 break;
             case 'Add employee': 
+                addEmployee();
                 break;
             case 'Update employee role':
                 break;
@@ -62,25 +63,6 @@ const allEmployees = () => {
     });
 };
 
-const allRoles = () => {
-    db.query(`SELECT roles.id, roles.title, department.name AS department, roles.salary
-    FROM roles
-    LEFT JOIN department ON roles.department_id = department.id; `, 
-    (err, rows) => {
-        console.table(rows);
-    return options();
-    });
-};
-
-const allDepartments = () => {
-    db.query(`SELECT department.*
-    FROM department; `, 
-    (err, rows) => {
-        console.table(rows);
-    return options();
-    });
-};
-
 const addEmployee = () => {
     inquirer.prompt([
     {
@@ -93,6 +75,70 @@ const addEmployee = () => {
         name: 'lastName',
         message: 'What is the employees last name?'
     },
-])}
+    {
+        type: 'input',
+        name: 'roles',
+        message: 'What is this employees role?',
+        //cant figure out how to list current roles in the table as options
+    },
+    {
+        type: 'input',
+        name: 'manager',
+        message: 'Who is your manager? (id)',
+    },
+])
+.then(val => {
+    let params = [
+        val.firstName,
+        val.lastName,
+        val.roles,
+        val.manager
+    ]
+let sql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id)
+VALUES (?,?,?,?)`;
+    db.query(sql, params, (err, rows) => {
+        console.table(rows);
+        return options();
+    })
+})};
+
+const allRoles = () => {
+    db.query(`SELECT roles.id, roles.title, department.name AS department, roles.salary
+    FROM roles
+    LEFT JOIN department ON roles.department_id = department.id; `, 
+    (err, rows) => {
+        console.table(rows);
+    return options();
+    });
+};
+
+const addRole =  () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'role',
+            message: 'What is the new role?'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What is the salary?'
+        },
+        {
+            type: 'input',
+            name: 'department',
+            message: 'What department is this role in? (1-4)?',
+        }
+    ])
+}
+
+const allDepartments = () => {
+    db.query(`SELECT department.*
+    FROM department; `, 
+    (err, rows) => {
+        console.table(rows);
+    return options();
+    });
+};
 
 options();
