@@ -138,9 +138,9 @@ const addRole =  () => {
             results.salary,
             results.department
         ]
-    let sql = `INSERT INTO roles (title, salary, department) VALUES (?,?,?)`;
+    let sql = `INSERT INTO roles (role, salary, department) VALUES (?,?,?)`;
         db.query(sql, params, (err, rows) => {
-            consoleTable.table(rows);
+            console.table(rows);
             return options();
         });
     })
