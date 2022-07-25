@@ -35,7 +35,6 @@ const options = () => {
                 addEmployee();
                 break;
             case 'Update employee role':
-                //could not get to work
                 break;
             case 'View all roles':
                 allRoles();
